@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sample WebView</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #2D2D2D, #000000); /* Gray to Black Gradient */
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+
+        p {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            width: 80%;
+            max-width: 320px;
+            height: 50px;
+            font-size: 18px;
+            padding: 10px;
+            border-radius: 8px;
+            border: none;
+            outline: none;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            backdrop-filter: blur(10px);
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .button {
+            margin-top: 20px;
+            width: 80%;
+            max-width: 320px;
+            height: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: #4C51BF; /* Indigo-700 */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0px 4px 10px rgba(76, 81, 191, 0.4);
+        }
+
+        .button:hover {
+            background: #4349A3; /* Slightly darker Indigo */
+            box-shadow: 0px 6px 15px rgba(76, 81, 191, 0.6);
+        }
+
+        .button:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<p>This is a WebView</p>
+<input id="inputField" type="text" placeholder="Enter message here">
+<button class="button" onclick="sendMessage()">Send data to native</button>
+
+<script>
+    if (!window.JSBridge) {
+        window.JSBridge = {};
+    }
+
+    window.JSBridge.showMessageInNative = function(message) {
+        if (window.flutter_inappwebview && window.flutter_inappwebview.callHandler) {
+            window.flutter_inappwebview.callHandler('showMessageInNative', message);
+        } else {
+            console.log("JSBridge: " + message);
+        }
+    };
+
+    function sendMessage() {
+        var valueReceived = document.getElementById("inputField").value;
+        JSBridge.showMessageInNative(valueReceived);
+    }
+
+    function updateFromNative(message) {
+        document.getElementById("inputField").value = message;
+    }
+</script>
+
+</body>
+</html>
